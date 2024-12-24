@@ -9,9 +9,12 @@ import SwiftUI
 
 @main
 struct AlphabetizerApp: App {
+    @State private var alphabetizer: Alphabetizer = Alphabetizer()
+    
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .environment(alphabetizer)
         }
     }
 }

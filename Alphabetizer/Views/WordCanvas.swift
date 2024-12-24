@@ -8,23 +8,23 @@
 import SwiftUI
 
 struct WordCanvas: View {
-    @State private var tiles: [Tile] = [
-        Tile(word: "First"),
-        Tile(word: "Second"),
-        Tile(word: "Third")
-    ]
+    @Environment(Alphabetizer.self) private var alphabetizer
+    
+    private var tiles: [Tile] {
+        alphabetizer.tiles
+    }
 
     var body: some View {
         ZStack {
-            HStack(spacing: Tile.spacing) {
-                ForEach(tiles) { _ in
-                    Rectangle()
-                        .fill(Color.purple.opacity(0.2))
-                        .offset(y: -(Tile.size + Tile.halfSize))
-                        .frame(width: Tile.placeholderSize, height: Tile.placeholderSize)
-                }
-            }
-            ForEach($tiles) { $tile in
+//            HStack(spacing: Tile.spacing) {
+//                ForEach(tiles) { _ in
+//                    Rectangle()
+//                        .fill(Color.purple.opacity(0.2))
+//                        .offset(y: -(Tile.size + Tile.halfSize))
+//                        .frame(width: Tile.placeholderSize, height: Tile.placeholderSize)
+//                }
+//            }
+            ForEach(tiles) { tile in
                 TileView(tile: tile)
                     .offset(tile.centeredOffset)
                     .gesture(DragGesture().onChanged { value in
@@ -36,11 +36,22 @@ struct WordCanvas: View {
         .onAppear {
             setInitialTilePositions()
         }
+        .onChange(of: alphabetizer.message) { oldValue, newValue in
+            switch(oldValue, newValue){
+            case (.youWin, .instructions):
+                withAnimation{
+                    setInitialTilePositions()
+                }
+            default:
+                break
+            }
+        }
     }
 }
 
 #Preview {
     WordCanvas()
+        .environment(Alphabetizer())
 }
 
 extension WordCanvas {

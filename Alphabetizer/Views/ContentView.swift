@@ -12,6 +12,7 @@ struct ContentView: View {
         VStack(spacing: 20) {
             ScoreView()
             MessageView()
+//            SetupView()
             Spacer()
             WordCanvas()
             Spacer()
@@ -23,4 +24,5 @@ struct ContentView: View {
 
 #Preview {
     ContentView()
+        .environment(Alphabetizer())
 }
